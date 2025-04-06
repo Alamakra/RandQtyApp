@@ -22,3 +22,13 @@ button {
 button:hover {
   background-color: rgb(1, 1, 205);
 }
+
+#author {
+  display: block;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+#quote {
+  font-style: italic;
+}
