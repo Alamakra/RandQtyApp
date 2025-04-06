@@ -9,7 +9,7 @@ body {
   text-align: center;
 }
 
-button {
+.btn {
   padding: 10px 20px;
   font-size: 16px;
   background-color: rgb(0, 115, 255);
