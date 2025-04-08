@@ -1,98 +1,89 @@
-import quotes from './quotes.js'; // Импорт цитат из файла quotes.js
+import quotes from './quotes.js';
 
-const quoteElement = document.getElementById('quote'); // Получение элемента цитаты из DOM
-const authorElement = document.getElementById('quote-author'); // Получение элемента автора из DOM
-const generateBtn = document.getElementById('generate-btn'); // Получение элемента кнопки генерации из DOM
-const makeFavBtn = document.getElementById('make-favorite-btn'); // Получение элемента кнопки добавления в избранное из DOM
-const favContainer = document.getElementById('favContainer'); // Получение элемента контейнера избранного из DOM
+const el = (id) => document.getElementById(id);
 
-let currentQuoteIndex; // Объявление переменной для хранения текущего индекса цитаты
+const createEl = (type, className, content, parent) => {
+  const element = document.createElement(type);
+  element.className = className;
+  element.innerHTML = content;
+  parent.appendChild(element);
+  return element;
+};
 
-function generateRandomQuote() {
-  // Функция для генерации случайной цитаты
-  currentQuoteIndex = Math.floor(Math.random() * quotes.length); // Генерация случайного индекса на основе длины массива цитат
-  const randomQuote = quotes[currentQuoteIndex]; // Получение случайной цитаты из массива цитат
-  const { quote, author: quoteAuthor } = randomQuote; // Деструктуризация цитаты и автора из объекта случайной цитаты
+const setFavBtnIcon = (isFavorite) =>
+  `<img src="heart-${isFavorite ? 'solid' : 'regular'}.svg" alt="${
+    isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'
+  }" />`;
 
-  console.log(currentQuoteIndex); // Вывод текущего индекса цитаты в консоль
+const [quoteEl, authorEl, generateBtn, makeFavBtn, favContainer] = [
+  el('quote'),
+  el('quote-author'),
+  el('generate-btn'),
+  el('make-favorite-btn'),
+  el('favContainer'),
+];
 
-  quoteElement.textContent = `"${quote}"`; // Установка текстового содержимого элемента цитаты
-  authorElement.textContent = quoteAuthor; // Установка текстового содержимого элемента автора
-  makeFavBtn.innerHTML = randomQuote.isFavorite
-    ? '<img src="heart-solid.svg" alt="Удалить из избранного" />'
-    : '<img src="heart-regular.svg" alt="Добавить в избранное" />'; // Установка текста кнопки в зависимости от свойства isFavorite
+let currentQuoteIndex;
 
-  makeFavBtn.style.display = 'inline-block'; // Установка стиля отображения кнопки добавления в избранное в строчный блок
-}
+const displayQuote = (quoteObj) => {
+  quoteEl.textContent = `"${quoteObj.quote}"`;
+  authorEl.textContent = quoteObj.author;
+  makeFavBtn.innerHTML = setFavBtnIcon(quoteObj.isFavorite);
+  makeFavBtn.style.display = 'inline-block';
+};
 
-function toggleFavorite() {
-  // Функция для переключения статуса "избранное" цитаты
-  // Валидация currentQuoteIndex
+const generateRandomQuote = () => {
+  currentQuoteIndex = Math.floor(Math.random() * quotes.length);
+  console.log(currentQuoteIndex);
+  displayQuote(quotes[currentQuoteIndex]);
+};
+
+const createFavoriteCard = (quoteObj) => {
+  const card = createEl('div', 'fav-card', '', favContainer);
+  card.innerHTML = `<p>${quoteObj.quote}</p><p class="author">${quoteObj.author}</p>`;
+
+  const deleteBtn = createEl('button', 'delBtn', 'Удалить хуйню', card);
+  deleteBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    quoteObj.isFavorite = false;
+    card.remove();
+    makeFavBtn.innerHTML = setFavBtnIcon(false);
+  });
+};
+
+const removeFavoriteCard = (quoteObj) => {
+  document
+    .querySelectorAll('.fav-card')
+    .forEach((card) =>
+      card.textContent.includes(quoteObj.quote) ? card.remove() : null
+    );
+};
+
+const toggleFavorite = () => {
   if (
     currentQuoteIndex === undefined ||
     currentQuoteIndex < 0 ||
     currentQuoteIndex >= quotes.length
   ) {
-    // Проверка, является ли currentQuoteIndex допустимым
-    console.error('Недопустимый currentQuoteIndex.'); // Вывод сообщения об ошибке в консоль, если currentQuoteIndex недопустим
-    return; // Возврат из функции
+    console.error('Invalid currentQuoteIndex.');
+    return;
   }
 
-  const currentQuote = quotes[currentQuoteIndex]; // Получение текущей цитаты из массива цитат
+  const currentQuote = quotes[currentQuoteIndex];
   if (!currentQuote) {
-    // Проверка, существует ли текущая цитата
-    console.error('Цитата для текущего индекса не найдена.'); // Вывод сообщения об ошибке в консоль, если цитата не найдена
-    return; // Возврат из функции
+    console.error('Quote not found for current index.');
+    return;
   }
 
-  // Переключение статуса "избранное"
-  currentQuote.isFavorite = !currentQuote.isFavorite; // Переключение свойства isFavorite текущей цитаты
+  currentQuote.isFavorite = !currentQuote.isFavorite;
+  makeFavBtn.innerHTML = setFavBtnIcon(currentQuote.isFavorite);
 
-  // Обновление текста кнопки в зависимости от статуса "избранное"
-  makeFavBtn.innerHTML = currentQuote.isFavorite
-    ? '<img src="heart-solid.svg" alt="Удалить из избранного" />'
-    : '<img src="heart-regular.svg" alt="Добавить в избранное" />'; // Обновление текста кнопки в зависимости от свойства isFavorite
+  currentQuote.isFavorite
+    ? createFavoriteCard(currentQuote)
+    : removeFavoriteCard(currentQuote);
+};
 
-  // Создание или удаление карточки избранного
-  if (currentQuote.isFavorite) {
-    // Проверка, является ли текущая цитата избранной
-    const favoriteCard = document.createElement('div'); // Создание нового элемента div
-    // Создание карточки избранного
-    favoriteCard.classList.add('fav-card'); // Добавление класса fav-card новому элементу div
-    favoriteCard.innerHTML = `
-      <p>${currentQuote.quote}</p>
-      <p class="author">${currentQuote.author}</p>
-      
-    `; // Установка внутреннего HTML нового элемента div
-    favContainer.appendChild(favoriteCard); // Добавление нового элемента div в контейнер избранного
+generateBtn.addEventListener('click', generateRandomQuote);
+makeFavBtn.addEventListener('click', toggleFavorite);
 
-    const deleteButton = document.createElement('botton');
-    deleteButton.classList.add('delBtn');
-    deleteButton.textContent = 'Удалить хуйню';
-
-    favoriteCard.appendChild(deleteButton);
-
-    deleteButton.addEventListener('click', function (event) {
-      event.stopPropagation();
-      currentQuote.isFavorite = false;
-      favoriteCard.remove();
-      makeFavBtn.innerHTML =
-        '<img src="heart-regular.svg" alt="Добавить в избранное" />';
-    });
-  } else {
-    // Удаление карточки из избранного
-    const favoriteCards = document.querySelectorAll('.fav-card'); // Получение всех элементов с классом fav-card
-    favoriteCards.forEach((card) => {
-      // Перебор всех карточек избранного
-      if (card.textContent.includes(currentQuote.quote)) {
-        // Проверка, содержит ли карточка текущую цитату
-        card.remove(); // Удаление карточки из DOM
-      }
-    });
-  }
-}
-
-generateBtn.addEventListener('click', generateRandomQuote); // Добавление слушателя событий к кнопке генерации
-makeFavBtn.addEventListener('click', toggleFavorite); // Добавление слушателя событий к кнопке добавления в избранное
-
-/**generateRandomQuote();*/ // Вызов функции generateRandomQuote
+//generateRandomQuote();
