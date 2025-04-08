@@ -1,4 +1,4 @@
-import quotes from './quotes.js';
+import quotes from './src/quotes.js';
 
 const el = (id) => document.getElementById(id);
 
