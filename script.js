@@ -57,12 +57,28 @@ function toggleFavorite() {
   if (currentQuote.isFavorite) {
     // Проверка, является ли текущая цитата избранной
     const favoriteCard = document.createElement('div'); // Создание нового элемента div
+    // Создание карточки избранного
     favoriteCard.classList.add('fav-card'); // Добавление класса fav-card новому элементу div
     favoriteCard.innerHTML = `
       <p>${currentQuote.quote}</p>
       <p class="author">${currentQuote.author}</p>
+      
     `; // Установка внутреннего HTML нового элемента div
     favContainer.appendChild(favoriteCard); // Добавление нового элемента div в контейнер избранного
+
+    const deleteButton = document.createElement('botton');
+    deleteButton.classList.add('delBtn');
+    deleteButton.textContent = 'Удалить хуйню';
+
+    favoriteCard.appendChild(deleteButton);
+
+    deleteButton.addEventListener('click', function (event) {
+      event.stopPropagation();
+      currentQuote.isFavorite = false;
+      favoriteCard.remove();
+      makeFavBtn.innerHTML =
+        '<img src="heart-regular.svg" alt="Добавить в избранное" />';
+    });
   } else {
     // Удаление карточки из избранного
     const favoriteCards = document.querySelectorAll('.fav-card'); // Получение всех элементов с классом fav-card

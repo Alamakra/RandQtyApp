@@ -66,4 +66,21 @@ button:hover {
   border-radius: 25px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 250px;
+  height: auto;
+}
+
+.delBtn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: rgb(255, 255, 255);
+  color: rgb(255, 0, 0);
+  border: 2px;
+
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.delBtn:hover {
+  background-color: red;
+  color: white;
 }
