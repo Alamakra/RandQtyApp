@@ -7,21 +7,21 @@ const makeFavBtn = document.getElementById('make-favorite-btn');
 const favContainer = document.getElementById('favContainer');
 
 let currentQuoteIndex;
-console.log(currentQuoteIndex);
 
 function generateRandomQuote() {
   currentQuoteIndex = Math.floor(Math.random() * quotes.length);
+  const randomQuote = quotes[currentQuoteIndex];
+  const { quote, author: quoteAuthor } = randomQuote;
 
-  const { quote, author: quoteAuthor } = quotes[currentQuoteIndex];
-
-  //const { quote, author: quoteAuthor } = randomQuote;
-  //const quote = randomQuote.quote;
-  //const quoteAuthor = randomQuote.author;
   console.log(currentQuoteIndex);
 
   quoteElement.textContent = `"${quote}"`;
   authorElement.textContent = quoteAuthor;
-  makeFavBtn.textContent = 'Add to Favorite';
+  makeFavBtn.textContent = randomQuote.isFavorite
+    ? 'Delete from favorites'
+    : 'Add to Favorite';
+
+  makeFavBtn.style.display = 'inline-block';
 }
 
 function toggleFavorite() {
