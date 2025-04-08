@@ -18,9 +18,9 @@ function generateRandomQuote() {
 
   quoteElement.textContent = `"${quote}"`; // Установка текстового содержимого элемента цитаты
   authorElement.textContent = quoteAuthor; // Установка текстового содержимого элемента автора
-  makeFavBtn.textContent = randomQuote.isFavorite
-    ? 'Удалить из избранного'
-    : 'Добавить в избранное'; // Установка текста кнопки в зависимости от свойства isFavorite
+  makeFavBtn.innerHTML = randomQuote.isFavorite
+    ? '<img src="heart-solid.svg" alt="Удалить из избранного" />'
+    : '<img src="heart-regular.svg" alt="Добавить в избранное" />'; // Установка текста кнопки в зависимости от свойства isFavorite
 
   makeFavBtn.style.display = 'inline-block'; // Установка стиля отображения кнопки добавления в избранное в строчный блок
 }
@@ -49,9 +49,9 @@ function toggleFavorite() {
   currentQuote.isFavorite = !currentQuote.isFavorite; // Переключение свойства isFavorite текущей цитаты
 
   // Обновление текста кнопки в зависимости от статуса "избранное"
-  makeFavBtn.textContent = currentQuote.isFavorite
-    ? 'Удалить из избранного'
-    : 'Добавить в избранное'; // Обновление текста кнопки в зависимости от свойства isFavorite
+  makeFavBtn.innerHTML = currentQuote.isFavorite
+    ? '<img src="heart-solid.svg" alt="Удалить из избранного" />'
+    : '<img src="heart-regular.svg" alt="Добавить в избранное" />'; // Обновление текста кнопки в зависимости от свойства isFavorite
 
   // Создание или удаление карточки избранного
   if (currentQuote.isFavorite) {

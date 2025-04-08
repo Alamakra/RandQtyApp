@@ -9,6 +9,12 @@ body {
   text-align: center;
 }
 
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .btn {
   padding: 10px 20px;
   font-size: 16px;
@@ -21,6 +27,16 @@ body {
 
 button:hover {
   background-color: rgb(1, 1, 205);
+}
+
+.star-icon {
+  width: 30px;
+  height: 24px;
+  background-image: url('https://fontawesome.com/icons/heart?f=classic&s=regular');
+  background-size: cover;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-top: -8px;
 }
 
 #make-favorite-btn {
